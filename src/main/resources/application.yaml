@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: sensor-monitor
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sensor_monitor
+    username: postgres
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: rekrul6@gmail.com
+    password: uqab obrq lydo wqpx
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+alert:
+  recipient-email: rerusya777@yandex.ru
+  cooldown-minutes: 10
+  thresholds:
+    temperature-max: 35.0
+    humidity-max: 80.0
+    offline-minutes: 5
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
