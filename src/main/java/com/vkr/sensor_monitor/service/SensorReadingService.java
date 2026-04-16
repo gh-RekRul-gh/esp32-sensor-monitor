@@ -4,6 +4,7 @@ import com.vkr.sensor_monitor.dto.SensorReadingRequest;
 import com.vkr.sensor_monitor.entity.*;
 import com.vkr.sensor_monitor.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class SensorReadingService {
 
     private final SensorRepository sensorRepository;
@@ -62,30 +64,36 @@ public class SensorReadingService {
 
     private void checkDht22Alerts(String sensorName, SensorReadingRequest.Dht22Data data) {
         if (data.temperature() != null && data.temperature() > temperatureMax) {
+            var messageBody = "Датчик %s зафиксировал высокую температуру: %.1f°C (порог: %.1f°C)"
+                    .formatted(sensorName, data.temperature(), temperatureMax);
+            log.info(messageBody);
             alertService.sendIfCooldownPassed(
                     "temp-high-" + sensorName,
                     "High temperature: " + sensorName,
-                    "Датчик %s зафиксировал высокую температуру: %.1f°C (порог: %.1f°C)"
-                            .formatted(sensorName, data.temperature(), temperatureMax)
+                    messageBody
             );
         }
         if (data.humidity() != null && data.humidity() > humidityMax) {
+            var messageBody = "Датчик %s зафиксировал высокую влажность: %.1f%% (порог: %.1f%%)"
+                    .formatted(sensorName, data.humidity(), humidityMax);
+            log.info(messageBody);
             alertService.sendIfCooldownPassed(
                     "hum-high-" + sensorName,
                     "High humidity: " + sensorName,
-                    "Датчик %s зафиксировал высокую влажность: %.1f%% (порог: %.1f%%)"
-                            .formatted(sensorName, data.humidity(), humidityMax)
+                    messageBody
             );
         }
     }
 
     private void checkMq2Alerts(String sensorName, SensorReadingRequest.Mq2Data data) {
         if (Boolean.TRUE.equals(data.gasDetected())) {
+            var messageBody = "Датчик %s обнаружил превышение уровня газа! Raw value: %d"
+                    .formatted(sensorName, data.rawValue());
+            log.info(messageBody);
             alertService.sendIfCooldownPassed(
                     "gas-" + sensorName,
                     "Gas detected: " + sensorName,
-                    "Датчик %s обнаружил превышение уровня газа! Raw value: %d"
-                            .formatted(sensorName, data.rawValue())
+                    messageBody
             );
         }
     }
@@ -97,6 +105,7 @@ public class SensorReadingService {
     }
 
     private void updateLastSeen(Sensor sensor) {
+        log.info("Sensor {} last seen at {}", sensor.getName(), LocalDateTime.now());
         sensor.setLastSeenAt(LocalDateTime.now());
         sensor.setStatus(SensorStatus.ONLINE);
         sensorRepository.save(sensor);
