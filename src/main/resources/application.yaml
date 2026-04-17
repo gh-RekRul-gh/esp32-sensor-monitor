@@ -40,6 +40,9 @@ management:
   endpoint:
     prometheus:
       enabled: true
+  health:
+    mail:
+      enabled: false
   metrics:
     export:
       prometheus:
