@@ -13,11 +13,11 @@ datasources:
     type: postgres
     uid: postgres
     url: postgres:5432
-    database: sensor_monitor
     user: postgres
     secureJsonData:
       password: password
     jsonData:
+      database: sensor_monitor
       sslmode: disable
       postgresVersion: 1500
       timescaledb: false
