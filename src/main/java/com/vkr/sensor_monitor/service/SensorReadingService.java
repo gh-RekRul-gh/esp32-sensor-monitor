@@ -4,16 +4,16 @@ import com.vkr.sensor_monitor.dto.SensorReadingRequest;
 import com.vkr.sensor_monitor.entity.*;
 import com.vkr.sensor_monitor.repository.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class SensorReadingService {
 
     private final SensorRepository sensorRepository;
@@ -87,7 +87,7 @@ public class SensorReadingService {
 
     private void checkMq2Alerts(String sensorName, SensorReadingRequest.Mq2Data data) {
         if (Boolean.TRUE.equals(data.gasDetected())) {
-            var messageBody = "Датчик %s обнаружил превышение уровня газа! Raw value: %d"
+            var messageBody = "Датчик %s обнаружил утечку газа! Raw value: %d"
                     .formatted(sensorName, data.rawValue());
             log.info(messageBody);
             alertService.sendIfCooldownPassed(
@@ -105,9 +105,17 @@ public class SensorReadingService {
     }
 
     private void updateLastSeen(Sensor sensor) {
-        log.info("Sensor {} last seen at {}", sensor.getName(), LocalDateTime.now());
+        boolean wasOffline = sensor.getStatus() == SensorStatus.OFFLINE;
         sensor.setLastSeenAt(LocalDateTime.now());
         sensor.setStatus(SensorStatus.ONLINE);
         sensorRepository.save(sensor);
+
+        if (wasOffline) {
+            log.info("Sensor {} recovered (was OFFLINE)", sensor.getName());
+            alertService.send(
+                    "Sensor recovered: " + sensor.getName(),
+                    "Датчик %s снова в сети.".formatted(sensor.getName())
+            );
+        }
     }
 }

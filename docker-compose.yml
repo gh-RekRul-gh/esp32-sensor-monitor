@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: sensor_monitor
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      TZ: UTC
+      PGTZ: UTC
     ports:
       - "5432:5432"
     volumes:
@@ -29,9 +31,19 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sensor_monitor
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      ALERT_RECIPIENT_EMAIL: ${ALERT_RECIPIENT_EMAIL}
+      TZ: UTC
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks:
       - app-network
 
@@ -49,7 +61,8 @@ services:
     networks:
       - app-network
     depends_on:
-      - app
+      app:
+        condition: service_healthy
 
   grafana:
     image: grafana/grafana-enterprise
@@ -57,9 +70,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
     networks:

@@ -42,16 +42,31 @@ public class AlertService {
 
     @Async
     public void send(String subject, String body) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(from);
-            message.setTo(recipient);
-            message.setSubject("[Sensor Monitor] " + subject);
-            message.setText(body);
-            mailSender.send(message);
-            log.info("Alert sent: {}", subject);
-        } catch (Exception e) {
-            log.error("Failed to send alert '{}': {}", subject, e.getMessage());
+        int maxAttempts = 3;
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(from);
+                message.setTo(recipient);
+                message.setSubject("[Sensor Monitor] " + subject);
+                message.setText(body);
+                mailSender.send(message);
+                log.info("Alert sent: {}", subject);
+                return;
+            } catch (Exception e) {
+                if (attempt == maxAttempts) {
+                    log.error("Failed to send alert '{}' after {} attempts: {}", subject, maxAttempts, e.getMessage());
+                } else {
+                    log.warn("Alert send attempt {}/{} failed: {}. Retrying in {}s...",
+                            attempt, maxAttempts, e.getMessage(), attempt * 2);
+                    try {
+                        Thread.sleep(attempt * 2000L);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+            }
         }
     }
 }
