@@ -23,9 +23,7 @@ services:
       - app-network
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile.app
+    build: .
     container_name: app
     ports:
       - "8080:8080"
@@ -55,7 +53,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./sensor-monitor/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -76,27 +74,9 @@ services:
       GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./sensor-monitor/grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
-    networks:
-      - app-network
-
-  # Запускается только с профилем simulator:
-  #   docker-compose --profile simulator up
-  sensor-simulator:
-    profiles: ["simulator"]
-    build:
-      context: .
-      dockerfile: Dockerfile.simulator
-    container_name: sensor-simulator
-    ports:
-      - "8081:8081"
-    environment:
-      SIMULATOR_SERVER_URL: http://app:8080/api/v1/sensor/readings
-    depends_on:
-      app:
-        condition: service_healthy
     networks:
       - app-network
 

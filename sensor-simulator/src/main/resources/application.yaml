@@ -1,0 +1,13 @@
+server:
+  port: 8081
+
+simulator:
+  server-url: http://localhost:8080/api/v1/sensor/readings
+
+spring:
+  application:
+    name: sensor-simulator
+
+logging:
+  level:
+    com.vkr.sensor_simulator: DEBUG
