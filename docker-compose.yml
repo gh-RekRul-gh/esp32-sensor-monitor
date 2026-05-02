@@ -25,7 +25,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.app
+      dockerfile: sensor-monitor/Dockerfile
     container_name: app
     ports:
       - "8080:8080"
@@ -82,13 +82,10 @@ services:
     networks:
       - app-network
 
-  # Запускается только с профилем simulator:
-  #   docker-compose --profile simulator up
   sensor-simulator:
-    profiles: ["simulator"]
     build:
       context: .
-      dockerfile: Dockerfile.simulator
+      dockerfile: sensor-simulator/Dockerfile
     container_name: sensor-simulator
     ports:
       - "8081:8081"

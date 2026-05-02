@@ -4,6 +4,7 @@ import java.util.List;
 
 public record StateResponse(
         String deviceId,
+        boolean enabled,
         SensorValues current,
         List<ActiveAnomaly> activeAnomalies
 ) {

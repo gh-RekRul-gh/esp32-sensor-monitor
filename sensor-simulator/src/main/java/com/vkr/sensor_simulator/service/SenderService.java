@@ -17,6 +17,7 @@ public class SenderService {
 
     @Scheduled(fixedDelay = 2000)
     public void send() {
+        if (!stateService.isEnabled()) return;
         SensorReadingRequest reading = stateService.getCurrentReading();
         try {
             restClient.post()

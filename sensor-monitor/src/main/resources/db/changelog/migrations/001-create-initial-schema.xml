@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="001-create-initial-schema" author="vkr">
+
+        <createTable tableName="sensor">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_seen_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="dht22_reading">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sensor_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_dht22_sensor" references="sensor(id)"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="temperature" type="FLOAT"/>
+            <column name="humidity" type="FLOAT"/>
+        </createTable>
+
+        <createTable tableName="bmp280_reading">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sensor_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_bmp280_sensor" references="sensor(id)"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="temperature" type="FLOAT"/>
+            <column name="pressure_hpa" type="FLOAT"/>
+        </createTable>
+
+        <createTable tableName="mq2_reading">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sensor_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_mq2_sensor" references="sensor(id)"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="raw_value" type="INT"/>
+            <column name="gas_detected" type="BOOLEAN"/>
+        </createTable>
+
+        <createTable tableName="hcsr04_reading">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sensor_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_hcsr04_sensor" references="sensor(id)"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="distance_cm" type="INT"/>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>

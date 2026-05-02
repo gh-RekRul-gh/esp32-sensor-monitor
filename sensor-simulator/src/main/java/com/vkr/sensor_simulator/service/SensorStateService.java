@@ -3,6 +3,7 @@ package com.vkr.sensor_simulator.service;
 import com.vkr.sensor_simulator.dto.AnomalyRequest;
 import com.vkr.sensor_simulator.dto.SensorReadingRequest;
 import com.vkr.sensor_simulator.dto.StateResponse;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class SensorStateService {
 
     private final Random random = new Random();
     private volatile String deviceId = "esp32";
+    private volatile boolean enabled = false;
 
     private final SensorField dht22Temp   = new SensorField(23.0, 0.15, 19.0, 28.0);
     private final SensorField dht22Hum    = new SensorField(50.0, 0.30, 35.0, 70.0);
@@ -76,6 +78,15 @@ public class SensorStateService {
         log.info("Device ID changed to {}", newId);
     }
 
+    public synchronized void setEnabled(boolean value) {
+        this.enabled = value;
+        log.info("Simulator {}", value ? "enabled" : "disabled");
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public synchronized StateResponse getState() {
         List<StateResponse.ActiveAnomaly> anomalies = new ArrayList<>();
         addIfActive(anomalies, "dht22.temperature",   dht22Temp);
@@ -87,6 +98,7 @@ public class SensorStateService {
 
         return new StateResponse(
                 deviceId,
+                enabled,
                 new StateResponse.SensorValues(
                         round1(dht22Temp.get()),  round1(dht22Hum.get()),
                         round2(bmp280Temp.get()), round1(bmp280Press.get()),
@@ -112,6 +124,7 @@ public class SensorStateService {
         return Math.round(v * 100f) / 100f;
     }
 
+    @Getter
     private static class SensorField {
         double value;
         final double mean;

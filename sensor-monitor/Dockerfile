@@ -1,15 +1,14 @@
-# Стадия 1: сборка
-FROM eclipse-temurin:21-jdk-alpine AS build
+# Stage 1: build
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-RUN ./mvnw dependency:go-offline -q
-COPY src src
-RUN ./mvnw package -DskipTests -q
+COPY sensor-monitor/pom.xml sensor-monitor/pom.xml
+RUN mvn dependency:go-offline -pl sensor-monitor -am -q
+COPY sensor-monitor/src sensor-monitor/src
+RUN mvn package -pl sensor-monitor -DskipTests -q
 
-# Стадия 2: запуск
+# Stage 2: run
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/sensor-monitor-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/sensor-monitor/target/sensor-monitor-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
