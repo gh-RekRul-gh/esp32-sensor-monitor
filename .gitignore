@@ -37,3 +37,6 @@ build/
 
 ### Secrets ###
 .env
+
+### Extra ###
+import_grafana_dashboard.sh

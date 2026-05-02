@@ -14,7 +14,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
+  "id": 1529009510387712,
   "liveNow": false,
   "panels": [
     {
@@ -79,7 +79,7 @@
           "refId": "A"
         }
       ],
-      "title": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u0435\u043d\u0441\u043e\u0440\u043e\u0432 \u043e\u043d\u043b\u0430\u0439\u043d",
+      "title": "Количество сенсоров онлайн",
       "type": "stat"
     },
     {
@@ -144,7 +144,7 @@
           "refId": "A"
         }
       ],
-      "title": "\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e \u0441\u0435\u043d\u0441\u043e\u0440\u043e\u0432 \u043e\u0444\u0444\u043b\u0430\u0439\u043d",
+      "title": "Количество сенсоров оффлайн",
       "type": "stat"
     },
     {
@@ -270,7 +270,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"\u0421\u0435\u043a\u0443\u043d\u0434 \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 DHT22\"\nFROM\n  sensor\nwhere \n  type = 'DHT22'",
+          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"Секунд с последних данных от DHT22\"\nFROM\n  sensor\nwhere \n  type = 'DHT22'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -297,7 +297,7 @@
           "table": "sensor"
         }
       ],
-      "title": "\u0412\u0440\u0435\u043c\u044f \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 DHT22",
+      "title": "Время с последних данных от DHT22",
       "type": "stat"
     },
     {
@@ -358,7 +358,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"\u0421\u0435\u043a\u0443\u043d\u0434 \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 BMP280\"\nFROM\n  sensor\nwhere \n  type = 'BMP280'",
+          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"Секунд с последних данных от BMP280\"\nFROM\n  sensor\nwhere \n  type = 'BMP280'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -385,7 +385,7 @@
           "table": "sensor"
         }
       ],
-      "title": "\u0412\u0440\u0435\u043c\u044f \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 BMP280",
+      "title": "Время с последних данных от BMP280",
       "type": "stat"
     },
     {
@@ -446,7 +446,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": " SELECT timestamp AS \"time\",\n         raw_value AS \"\u041a\u043e\u043b-\u0432\u043e \u0433\u0430\u0437\u0430\"\n  FROM mq2_reading                                                                                                                     \n  WHERE $__timeFilter(timestamp)\n  ORDER BY timestamp",
+          "rawSql": " SELECT timestamp AS \"time\",\n         raw_value AS \"Кол-во газа\"\n  FROM mq2_reading                                                                                                                     \n  WHERE $__timeFilter(timestamp)\n  ORDER BY timestamp",
           "refId": "A",
           "sql": {
             "columns": [
@@ -484,7 +484,7 @@
           "table": "dht22_reading"
         }
       ],
-      "title": "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0433\u0430\u0437\u0430 MQ-2",
+      "title": "Уровень газа MQ-2",
       "type": "stat"
     },
     {
@@ -541,7 +541,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT timestamp AS \"time\",\n         distance_cm AS \"\u0420\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0441\u043c\"\n  FROM hcsr04_reading                  \n  WHERE $__timeFilter(timestamp)\n  ORDER BY timestamp",
+          "rawSql": "SELECT timestamp AS \"time\",\n         distance_cm AS \"Расстояние см\"\n  FROM hcsr04_reading                  \n  WHERE $__timeFilter(timestamp)\n  ORDER BY timestamp",
           "refId": "A",
           "sql": {
             "columns": [
@@ -579,7 +579,7 @@
           "table": "dht22_reading"
         }
       ],
-      "title": "\u0420\u0430\u0441\u0441\u0442\u043e\u044f\u043d\u0438\u0435 HC-SR04",
+      "title": "Расстояние HC-SR04",
       "type": "stat"
     },
     {
@@ -640,7 +640,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"\u0421\u0435\u043a\u0443\u043d\u0434 \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 MQ-2\"\nFROM\n  sensor\nwhere \n  type = 'MQ2'",
+          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"Секунд с последних данных от MQ-2\"\nFROM\n  sensor\nwhere \n  type = 'MQ2'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -667,7 +667,7 @@
           "table": "sensor"
         }
       ],
-      "title": "\u0412\u0440\u0435\u043c\u044f \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 MQ-2",
+      "title": "Время с последних данных от MQ-2",
       "type": "stat"
     },
     {
@@ -728,7 +728,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"\u0421\u0435\u043a\u0443\u043d\u0434 \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 HC-SR04\"\nFROM\n  sensor\nwhere \n  type = 'HCSR04'",
+          "rawSql": "SELECT\n  EXTRACT(EPOCH FROM (NOW() - last_seen_at)) AS \"Секунд с последних данных от HC-SR04\"\nFROM\n  sensor\nwhere \n  type = 'HCSR04'",
           "refId": "A",
           "sql": {
             "columns": [
@@ -755,7 +755,7 @@
           "table": "sensor"
         }
       ],
-      "title": "\u0412\u0440\u0435\u043c\u044f \u0441 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0445 \u0434\u0430\u043d\u043d\u044b\u0445 \u043e\u0442 HC-SR04",
+      "title": "Время с последних данных от HC-SR04",
       "type": "stat"
     },
     {
@@ -848,7 +848,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT timestamp AS \"time\",                                                                                                          \n         humidity AS \"\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c %\"\n  FROM dht22_reading\n  WHERE $__timeFilter(timestamp)                                                                                                       \n  ORDER BY timestamp ",
+          "rawSql": "SELECT timestamp AS \"time\",                                                                                                          \n         humidity AS \"Влажность %\"\n  FROM dht22_reading\n  WHERE $__timeFilter(timestamp)                                                                                                       \n  ORDER BY timestamp ",
           "refId": "A",
           "sql": {
             "columns": [
@@ -886,7 +886,7 @@
           "table": "dht22_reading"
         }
       ],
-      "title": "\u0412\u043b\u0430\u0436\u043d\u043e\u0441\u0442\u044c DHT22",
+      "title": "Влажность DHT22",
       "type": "stat"
     },
     {
@@ -943,7 +943,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT timestamp AS \"time\",\n         pressure_hpa AS \"\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435 hPa\"\n  FROM bmp280_reading\n  WHERE $__timeFilter(timestamp)                                                                                                       \n  ORDER BY timestamp",
+          "rawSql": "SELECT timestamp AS \"time\",\n         pressure_hpa AS \"Давление hPa\"\n  FROM bmp280_reading\n  WHERE $__timeFilter(timestamp)                                                                                                       \n  ORDER BY timestamp",
           "refId": "A",
           "sql": {
             "columns": [
@@ -964,7 +964,7 @@
           }
         }
       ],
-      "title": "\u0414\u0430\u0432\u043b\u0435\u043d\u0438\u0435 BMP280",
+      "title": "Давление BMP280",
       "type": "stat"
     },
     {
@@ -1025,7 +1025,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT timestamp AS \"time\",                                                                                                          \n         temperature AS \"\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 DHT22\"                                                                                                        \nFROM dht22_reading           \nWHERE $__timeFilter(timestamp)\nORDER BY timestamp;",
+          "rawSql": "SELECT timestamp AS \"time\",                                                                                                          \n         temperature AS \"Температура DHT22\"                                                                                                        \nFROM dht22_reading           \nWHERE $__timeFilter(timestamp)\nORDER BY timestamp;",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1070,7 +1070,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT timestamp AS \"time\",                                                                                                          \n       temperature AS \"\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 BMP280\"\nFROM bmp280_reading                                                                                                                  \nWHERE $__timeFilter(timestamp)\nORDER BY timestamp",
+          "rawSql": "SELECT timestamp AS \"time\",                                                                                                          \n       temperature AS \"Температура BMP280\"\nFROM bmp280_reading                                                                                                                  \nWHERE $__timeFilter(timestamp)\nORDER BY timestamp",
           "refId": "B",
           "sql": {
             "columns": [
@@ -1091,7 +1091,7 @@
           }
         }
       ],
-      "title": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 DHT22 \u0438 BMP280",
+      "title": "Температура DHT22 и BMP280",
       "type": "stat"
     },
     {
@@ -1124,7 +1124,7 @@
               "mode": "off"
             }
           },
-          "displayName": "\u0415\u0441\u0442\u044c \u043b\u0438 \u0443\u0442\u0435\u0447\u043a\u0430 \u0433\u0430\u0437\u0430",
+          "displayName": "Есть ли утечка газа",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1180,7 +1180,7 @@
           "editorMode": "code",
           "format": "time_series",
           "rawQuery": true,
-          "rawSql": "SELECT timestamp AS \"time\",\n         CASE WHEN gas_detected THEN 1 ELSE 0 END AS \"\u0422\u0440\u0435\u0432\u043e\u0433\u0430\"\n  FROM mq2_reading\n  WHERE $__timeFilter(timestamp)\n  ORDER BY timestamp",
+          "rawSql": "SELECT timestamp AS \"time\",\n         CASE WHEN gas_detected THEN 1 ELSE 0 END AS \"Тревога\"\n  FROM mq2_reading\n  WHERE $__timeFilter(timestamp)\n  ORDER BY timestamp",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1218,7 +1218,7 @@
           "table": "dht22_reading"
         }
       ],
-      "title": "\u0423\u0442\u0435\u0447\u043a\u0430 \u0433\u0430\u0437\u0430",
+      "title": "Утечка газа",
       "type": "barchart"
     }
   ],
@@ -1246,5 +1246,5 @@
   "timezone": "browser",
   "title": "Main dashboard",
   "uid": "adpljqp",
-  "version": 29
+  "version": 9
 }
