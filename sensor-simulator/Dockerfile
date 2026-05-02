@@ -1,11 +1,11 @@
 # Stage 1: build
 FROM maven:3.9-eclipse-temurin-21-alpine AS build
-WORKDIR /app
-COPY pom.xml .
-COPY sensor-simulator/pom.xml sensor-simulator/pom.xml
-RUN mvn dependency:go-offline -pl sensor-simulator -am -q
-COPY sensor-simulator/src sensor-simulator/src
-RUN mvn package -pl sensor-simulator -DskipTests -q
+COPY pom.xml /app/pom.xml
+WORKDIR /app/sensor-simulator
+COPY sensor-simulator/pom.xml pom.xml
+RUN mvn dependency:go-offline -q
+COPY sensor-simulator/src src
+RUN mvn package -DskipTests -q
 
 # Stage 2: run
 FROM eclipse-temurin:21-jre-alpine

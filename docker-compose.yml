@@ -22,11 +22,11 @@ services:
     networks:
       - app-network
 
-  app:
+  sensor-monitor:
     build:
       context: .
       dockerfile: sensor-monitor/Dockerfile
-    container_name: app
+    container_name: sensor-monitor
     ports:
       - "8080:8080"
     environment:
@@ -49,6 +49,21 @@ services:
     networks:
       - app-network
 
+  sensor-simulator:
+    build:
+      context: .
+      dockerfile: sensor-simulator/Dockerfile
+    container_name: sensor-simulator
+    ports:
+      - "8081:8081"
+    environment:
+      SIMULATOR_SERVER_URL: http://sensor-monitor:8080/api/v1/sensor/readings
+    depends_on:
+      sensor-monitor:
+        condition: service_healthy
+    networks:
+      - app-network
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -63,7 +78,7 @@ services:
     networks:
       - app-network
     depends_on:
-      app:
+      sensor-monitor:
         condition: service_healthy
 
   grafana:
@@ -79,21 +94,6 @@ services:
       - ./sensor-monitor/grafana/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
-    networks:
-      - app-network
-
-  sensor-simulator:
-    build:
-      context: .
-      dockerfile: sensor-simulator/Dockerfile
-    container_name: sensor-simulator
-    ports:
-      - "8081:8081"
-    environment:
-      SIMULATOR_SERVER_URL: http://app:8080/api/v1/sensor/readings
-    depends_on:
-      app:
-        condition: service_healthy
     networks:
       - app-network
 
