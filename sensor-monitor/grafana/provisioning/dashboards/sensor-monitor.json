@@ -202,7 +202,7 @@
             "type": "prometheus"
           },
           "editorMode": "builder",
-          "expr": "process_cpu_usage{instance=\"app:8080\"}",
+          "expr": "process_cpu_usage{instance=\"sensor-monitor:8080\"}",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -1246,5 +1246,5 @@
   "timezone": "browser",
   "title": "Main dashboard",
   "uid": "adpljqp",
-  "version": 9
+  "version": 11
 }
