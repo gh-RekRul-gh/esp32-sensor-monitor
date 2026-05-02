@@ -1,6 +1,12 @@
 spring:
   application:
     name: sensor-monitor
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 4
+        queue-capacity: 20
 
   datasource:
     url: jdbc:postgresql://localhost:5432/sensor_monitor

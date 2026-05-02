@@ -30,6 +30,7 @@ public class AlertService {
 
     private final ConcurrentMap<String, LocalDateTime> lastAlertTime = new ConcurrentHashMap<>();
 
+    @Async
     public void sendIfCooldownPassed(String alertKey, String subject, String body) {
         LocalDateTime last = lastAlertTime.get(alertKey);
         if (last != null && last.plusMinutes(cooldownMinutes).isAfter(LocalDateTime.now())) {
