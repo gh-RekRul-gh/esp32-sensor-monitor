@@ -24,6 +24,7 @@ public class SensorStateService {
 
     private final Random random = new Random();
     private volatile String deviceId = "esp32";
+    @Getter
     private volatile boolean enabled = false;
 
     private final SensorField dht22Temp   = new SensorField(23.0, 0.15, 19.0, 28.0);
@@ -44,13 +45,13 @@ public class SensorStateService {
     }
 
     public synchronized SensorReadingRequest getCurrentReading() {
-        boolean gasDetected = mq2Raw.get() > GAS_THRESHOLD;
+        boolean gasDetected = mq2Raw.getValue() > GAS_THRESHOLD;
         return new SensorReadingRequest(
                 deviceId,
-                new SensorReadingRequest.Dht22Data(round1(dht22Temp.get()), round1(dht22Hum.get())),
-                new SensorReadingRequest.Bmp280Data(round2(bmp280Temp.get()), round1(bmp280Press.get())),
-                new SensorReadingRequest.Mq2Data((int) Math.round(mq2Raw.get()), gasDetected),
-                new SensorReadingRequest.Hcsr04Data((int) Math.round(hcsr04Dist.get()))
+                new SensorReadingRequest.Dht22Data(round1(dht22Temp.getValue()), round1(dht22Hum.getValue())),
+                new SensorReadingRequest.Bmp280Data(round2(bmp280Temp.getValue()), round1(bmp280Press.getValue())),
+                new SensorReadingRequest.Mq2Data((int) Math.round(mq2Raw.getValue()), gasDetected),
+                new SensorReadingRequest.Hcsr04Data((int) Math.round(hcsr04Dist.getValue()))
         );
     }
 
@@ -83,10 +84,6 @@ public class SensorStateService {
         log.info("Simulator {}", value ? "enabled" : "disabled");
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public synchronized StateResponse getState() {
         List<StateResponse.ActiveAnomaly> anomalies = new ArrayList<>();
         addIfActive(anomalies, "dht22.temperature",   dht22Temp);
@@ -100,10 +97,10 @@ public class SensorStateService {
                 deviceId,
                 enabled,
                 new StateResponse.SensorValues(
-                        round1(dht22Temp.get()),  round1(dht22Hum.get()),
-                        round2(bmp280Temp.get()), round1(bmp280Press.get()),
-                        (int) Math.round(mq2Raw.get()), mq2Raw.get() > GAS_THRESHOLD,
-                        (int) Math.round(hcsr04Dist.get())
+                        round1(dht22Temp.getValue()),  round1(dht22Hum.getValue()),
+                        round2(bmp280Temp.getValue()), round1(bmp280Press.getValue()),
+                        (int) Math.round(mq2Raw.getValue()), mq2Raw.getValue() > GAS_THRESHOLD,
+                        (int) Math.round(hcsr04Dist.getValue())
                 ),
                 anomalies
         );
@@ -112,7 +109,7 @@ public class SensorStateService {
     private void addIfActive(List<StateResponse.ActiveAnomaly> list, String name, SensorField field) {
         long remaining = field.remainingDecaySeconds();
         if (remaining > 0) {
-            list.add(new StateResponse.ActiveAnomaly(name, field.get(), remaining));
+            list.add(new StateResponse.ActiveAnomaly(name, field.getValue(), remaining));
         }
     }
 
@@ -124,9 +121,10 @@ public class SensorStateService {
         return Math.round(v * 100f) / 100f;
     }
 
-    @Getter
     private static class SensorField {
+        @Getter
         double value;
+        
         final double mean;
         final double sigma;
         final double min;
@@ -169,8 +167,6 @@ public class SensorStateService {
             overrideEnd   = overrideStart.plusSeconds(decaySeconds);
             value         = anomalyValue;
         }
-
-        double get() { return value; }
 
         long remainingDecaySeconds() {
             if (overrideEnd == null) return 0;
