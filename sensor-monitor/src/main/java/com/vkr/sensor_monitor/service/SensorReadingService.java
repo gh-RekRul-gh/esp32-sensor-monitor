@@ -29,6 +29,15 @@ public class SensorReadingService {
     @Value("${alert.thresholds.humidity-max:80.0}")
     private double humidityMax;
 
+    @Value("${alert.thresholds.pressure-min:950.0}")
+    private double pressureMin;
+
+    @Value("${alert.thresholds.pressure-max:1050.0}")
+    private double pressureMax;
+
+    @Value("${alert.thresholds.distance-min:10.0}")
+    private double distanceMin;
+
     @Transactional
     public void processReading(SensorReadingRequest request) {
         if (request.dht22() != null) {
@@ -44,6 +53,7 @@ public class SensorReadingService {
             SensorReadingRequest.Bmp280Data data = request.bmp280();
             bmp280Repo.save(new Bmp280Reading(sensor, data.temperature(), data.pressureHpa()));
             updateLastSeen(sensor);
+            checkBmp280Alerts(sensor.getName(), data);
         }
 
         if (request.mq2() != null) {
@@ -59,6 +69,7 @@ public class SensorReadingService {
             SensorReadingRequest.Hcsr04Data data = request.hcsr04();
             hcsr04Repo.save(new Hcsr04Reading(sensor, data.distanceCm()));
             updateLastSeen(sensor);
+            checkHcsr04Alerts(sensor.getName(), data);
         }
     }
 
@@ -91,8 +102,44 @@ public class SensorReadingService {
                     .formatted(sensorName, data.rawValue());
             log.info(messageBody);
             alertService.sendIfCooldownPassed(
-                    "gas-" + sensorName,
+                    "gas-detected-" + sensorName,
                     "Gas detected: " + sensorName,
+                    messageBody
+            );
+        }
+    }
+
+    private void checkBmp280Alerts(String sensorName, SensorReadingRequest.Bmp280Data data) {
+        if (data.pressureHpa() != null && data.pressureHpa() > pressureMax) {
+            var messageBody = "Датчик %s зафиксировал высокое давление: %.1f гПа (порог: %.1f гПа)"
+                    .formatted(sensorName, data.pressureHpa(), pressureMax);
+            log.info(messageBody);
+            alertService.sendIfCooldownPassed(
+                    "pressure-high-" + sensorName,
+                    "High pressure: " + sensorName,
+                    messageBody
+            );
+        }
+        if (data.pressureHpa() != null && data.pressureHpa() < pressureMin) {
+            var messageBody = "Датчик %s зафиксировал низкое давление: %.1f гПа (порог: %.1f гПа)"
+                    .formatted(sensorName, data.pressureHpa(), pressureMin);
+            log.info(messageBody);
+            alertService.sendIfCooldownPassed(
+                    "pressure-low-" + sensorName,
+                    "Low pressure: " + sensorName,
+                    messageBody
+            );
+        }
+    }
+
+    private void checkHcsr04Alerts(String sensorName, SensorReadingRequest.Hcsr04Data data) {
+        if (data.distanceCm() != null && data.distanceCm() < distanceMin) {
+            var messageBody = "Датчик %s зафиксировал критически малое расстояние: %d см (порог: %.1f см) — уровень жидкости слишком высок"
+                    .formatted(sensorName, data.distanceCm(), distanceMin);
+            log.info(messageBody);
+            alertService.sendIfCooldownPassed(
+                    "distance-low-" + sensorName,
+                    "High liquid level: " + sensorName,
                     messageBody
             );
         }

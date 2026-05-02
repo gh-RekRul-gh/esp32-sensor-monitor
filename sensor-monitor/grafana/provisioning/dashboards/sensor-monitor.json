@@ -406,7 +406,7 @@
               },
               {
                 "color": "red",
-                "value": 3000
+                "value": 2000
               }
             ]
           }
@@ -500,8 +500,12 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": 0
+              },
+              {
+                "color": "green",
+                "value": 10
               }
             ]
           }
@@ -787,7 +791,7 @@
       },
       "pluginVersion": "13.0.0",
       "targets": [],
-      "title": "New panel",
+      "title": "Алерты",
       "type": "alertlist"
     },
     {
@@ -902,8 +906,16 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": 0
+              },
+              {
+                "color": "green",
+                "value": 950
+              },
+              {
+                "color": "red",
+                "value": 1050
               }
             ]
           }
@@ -1246,5 +1258,5 @@
   "timezone": "browser",
   "title": "Main dashboard",
   "uid": "adpljqp",
-  "version": 14
+  "version": 21
 }
