@@ -44,6 +44,23 @@ alert:
     distance-min: 10.0
     offline-minutes: 5
 
+analysis:
+  window-size: 30
+  zscore-threshold: 3.5
+  drift-slope-threshold: 0.105  # max для идеальной линии при N=30 ≈ 0.1155
+  zscore-thresholds:
+    pressure_hpa: 5.0   # давление атмосферное медленно плавает
+    temperature: 3.5
+    humidity: 3.5
+    distance_cm: 4.0
+    raw_value: 4.0
+  drift-slope-thresholds:
+    pressure_hpa: 0.112  # чуть ниже теормакса — только для реального дрейфа датчика
+    temperature: 0.105
+    humidity: 0.105
+    distance_cm: 0.105
+    raw_value: 0.108
+
 management:
   endpoints:
     web:

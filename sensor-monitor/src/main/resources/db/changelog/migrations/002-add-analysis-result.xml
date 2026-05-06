@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="002-add-analysis-result" author="vkr">
+
+        <createTable tableName="sensor_analysis_result">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sensor_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_analysis_sensor" references="sensor(id)"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="analysis_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="metric" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="detected" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="current_value" type="DOUBLE"/>
+            <column name="mean" type="DOUBLE"/>
+            <column name="std_dev" type="DOUBLE"/>
+            <column name="z_score" type="DOUBLE"/>
+            <column name="slope" type="DOUBLE"/>
+            <column name="details" type="VARCHAR(500)"/>
+        </createTable>
+
+        <createIndex tableName="sensor_analysis_result" indexName="idx_analysis_sensor_timestamp">
+            <column name="sensor_id"/>
+            <column name="timestamp" descending="true"/>
+        </createIndex>
+
+        <createIndex tableName="sensor_analysis_result" indexName="idx_analysis_detected">
+            <column name="sensor_id"/>
+            <column name="detected"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

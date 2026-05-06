@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/changelog/migrations/001-create-initial-schema.xml
+  - include:
+      file: db/changelog/migrations/002-add-analysis-result.xml

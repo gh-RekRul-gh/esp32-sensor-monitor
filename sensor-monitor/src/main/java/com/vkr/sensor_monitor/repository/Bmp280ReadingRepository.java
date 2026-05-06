@@ -3,6 +3,7 @@ package com.vkr.sensor_monitor.repository;
 import java.util.List;
 
 import com.vkr.sensor_monitor.entity.Bmp280Reading;
+import com.vkr.sensor_monitor.entity.Sensor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,4 +12,7 @@ public interface Bmp280ReadingRepository extends JpaRepository<Bmp280Reading, Lo
 
     @Query("SELECT b FROM Bmp280Reading b ORDER BY b.timestamp DESC LIMIT :limit")
     List<Bmp280Reading> findLatestReadings(@Param("limit") Integer limit);
+
+    @Query("SELECT r FROM Bmp280Reading r WHERE r.sensor = :sensor ORDER BY r.timestamp DESC LIMIT :limit")
+    List<Bmp280Reading> findLatestBySensor(@Param("sensor") Sensor sensor, @Param("limit") int limit);
 }

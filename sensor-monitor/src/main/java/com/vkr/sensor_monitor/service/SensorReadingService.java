@@ -22,6 +22,7 @@ public class SensorReadingService {
     private final Mq2ReadingRepository mq2Repo;
     private final Hcsr04ReadingRepository hcsr04Repo;
     private final AlertService alertService;
+    private final SensorAnalysisService analysisService;
 
     @Value("${alert.thresholds.temperature-max:35.0}")
     private double temperatureMax;
@@ -46,6 +47,7 @@ public class SensorReadingService {
             dht22Repo.save(new Dht22Reading(sensor, data.temperature(), data.humidity()));
             updateLastSeen(sensor);
             checkDht22Alerts(sensor.getName(), data);
+            analysisService.analyzeDht22(sensor, data.temperature(), data.humidity());
         }
 
         if (request.bmp280() != null) {
@@ -54,6 +56,7 @@ public class SensorReadingService {
             bmp280Repo.save(new Bmp280Reading(sensor, data.temperature(), data.pressureHpa()));
             updateLastSeen(sensor);
             checkBmp280Alerts(sensor.getName(), data);
+            analysisService.analyzeBmp280(sensor, data.temperature(), data.pressureHpa());
         }
 
         if (request.mq2() != null) {
@@ -62,6 +65,7 @@ public class SensorReadingService {
             mq2Repo.save(new Mq2Reading(sensor, data.rawValue(), data.gasDetected()));
             updateLastSeen(sensor);
             checkMq2Alerts(sensor.getName(), data);
+            analysisService.analyzeMq2(sensor, data.rawValue());
         }
 
         if (request.hcsr04() != null) {
@@ -70,6 +74,7 @@ public class SensorReadingService {
             hcsr04Repo.save(new Hcsr04Reading(sensor, data.distanceCm()));
             updateLastSeen(sensor);
             checkHcsr04Alerts(sensor.getName(), data);
+            analysisService.analyzeHcsr04(sensor, data.distanceCm());
         }
     }
 
