@@ -1147,7 +1147,13 @@
       "id": 21,
       "options": {
         "cellHeight": "sm",
-        "showHeader": true
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "eps"
+          }
+        ]
       },
       "pluginVersion": "13.0.0",
       "targets": [
@@ -1160,7 +1166,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT          \n  r.timestamp AS \"Время\",\n  s.name AS \"Датчик\",                                                                                                                                                  \n  r.metric AS \"Метрика\",\n  r.analysis_type AS \"Тип\",                                                                                                                                            \n  ROUND(r.current_value::numeric, 2) AS \"Значение\",\n  ROUND(r.mean::numeric, 2) AS \"Среднее\",                                                                                                                              \n  ROUND(r.std_dev::numeric, 3) AS \"eps\",\n  ROUND(r.z_score::numeric, 2) AS \"Z\",                                                                                                                                 \n  ROUND(r.slope::numeric, 4) AS \"Наклон\"                                                                                                                               \nFROM sensor_analysis_result r                                                                                                                                          \n  JOIN sensor s ON s.id = r.sensor_id                                                                                                                                    \nWHERE r.detected = true\n  -- AND $__timeFilter(r.timestamp)  \nORDER BY r.timestamp DESC                                                                                                                                          \nLIMIT 100",
+          "rawSql": "SELECT          \n  r.timestamp AS \"Время\",\n  s.name AS \"Датчик\",                                                                                                                                                  \n  r.metric AS \"Метрика\",\n  r.analysis_type AS \"Тип\",                                                                                                                                            \n  ROUND(r.current_value::numeric, 2) AS \"Значение\",\n  ROUND(r.mean::numeric, 2) AS \"Среднее\",                                                                                                                              \n  ROUND(r.std_dev::numeric, 3) AS \"eps\",\n  ROUND(r.z_score::numeric, 2) AS \"Z\",                                                                                                                                 \n  ROUND(r.slope::numeric, 4) AS \"Наклон\"                                                                                                                               \nFROM sensor_analysis_result r                                                                                                                                          \n  JOIN sensor s ON s.id = r.sensor_id                                                                                                                                    \nWHERE r.detected = true\n  AND $__timeFilter(r.timestamp)  \nORDER BY r.timestamp DESC                                                                                                                                          \nLIMIT 100",
           "refId": "A",
           "sql": {
             "columns": [
@@ -1181,7 +1187,7 @@
           }
         }
       ],
-      "title": "Таблица сработавших событий проверок",
+      "title": "Таблица сработавших аномалий",
       "type": "table"
     }
   ],
@@ -1209,5 +1215,5 @@
   "timezone": "browser",
   "title": "Main dashboard",
   "uid": "adpljqp",
-  "version": 32
+  "version": 35
 }

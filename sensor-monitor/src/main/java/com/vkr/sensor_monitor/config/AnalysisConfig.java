@@ -16,7 +16,7 @@ public class AnalysisConfig {
 
     private int windowSize = 30;
     private double zscoreThreshold = 3.5;
-    private double driftSlopeThreshold = 0.2;
+    private double driftSlopeThreshold = 0.11;
 
     // Per-metric overrides; fallback to global threshold if not set
     private Map<String, Double> zscoreThresholds = new HashMap<>();

@@ -9,9 +9,9 @@ spring:
         queue-capacity: 20
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/sensor_monitor
-    username: postgres
-    password: password
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/sensor_monitor}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:password}
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
