@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="003-add-reading-indexes" author="vkr">
+
+        <!-- Покрывает запросы анализа: WHERE sensor_id = ? ORDER BY timestamp DESC LIMIT N -->
+        <createIndex tableName="dht22_reading" indexName="idx_dht22_sensor_timestamp">
+            <column name="sensor_id"/>
+            <column name="timestamp" descending="true"/>
+        </createIndex>
+
+        <createIndex tableName="bmp280_reading" indexName="idx_bmp280_sensor_timestamp">
+            <column name="sensor_id"/>
+            <column name="timestamp" descending="true"/>
+        </createIndex>
+
+        <createIndex tableName="mq2_reading" indexName="idx_mq2_sensor_timestamp">
+            <column name="sensor_id"/>
+            <column name="timestamp" descending="true"/>
+        </createIndex>
+
+        <createIndex tableName="hcsr04_reading" indexName="idx_hcsr04_sensor_timestamp">
+            <column name="sensor_id"/>
+            <column name="timestamp" descending="true"/>
+        </createIndex>
+
+    </changeSet>
+
+</databaseChangeLog>

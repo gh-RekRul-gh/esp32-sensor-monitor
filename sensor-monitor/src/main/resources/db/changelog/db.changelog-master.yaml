@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/migrations/001-create-initial-schema.xml
   - include:
       file: db/changelog/migrations/002-add-analysis-result.xml
+  - include:
+      file: db/changelog/migrations/003-add-reading-indexes.xml
